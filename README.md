@@ -1,6 +1,6 @@
 How to build:
-cd build 
-make
+  cd build 
+  make
 
 How to run:
-./main
+  ./main
