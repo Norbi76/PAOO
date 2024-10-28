@@ -1,5 +1,6 @@
 # define STRSIZE 10
 #include <cstring>
+#include <string>
 using namespace std;
 
 class Vehicle {
@@ -7,6 +8,14 @@ private:
     int *nrOfWheels, *hp;
     char *color, *brand;
 public:
+    //Default constructor
+    Vehicle() : nrOfWheels(0), hp(0), color(nullptr), brand(nullptr){
+        nrOfWheels = new int;
+        hp = new int;
+        color = new char[STRSIZE];
+        brand = new char[STRSIZE];
+    }
+
     //Normal constructor
     Vehicle(int initial_nrOfWheels, int initial_hp, const char *initial_color, const char *initial_brand) {
         nrOfWheels = new int;
@@ -29,8 +38,18 @@ public:
 
         *nrOfWheels = *obj.nrOfWheels;
         *hp = *obj.hp;
-        *color = *obj.color;
-        *brand = *obj.brand;
+        strcpy(color, obj.color);
+        strcpy(brand, obj.brand);
+        // *color = ;
+        // *brand = ;
+    }
+
+    // Move constructor
+    Vehicle(Vehicle&& other) noexcept: nrOfWheels(other.nrOfWheels), hp(other.hp), color(move(other.color)), brand(move(other.brand)) {
+        other.nrOfWheels = 0;
+        other.hp = 0;
+        other.color = nullptr;
+        other.brand = nullptr;
     }
 
     //Deconstructor 
