@@ -1,0 +1,3 @@
+/mnt/c/Users/Norbert/Desktop/nrbi/faculta/an4/sem1/PAOO/build/CMakeFiles/main.dir
+/mnt/c/Users/Norbert/Desktop/nrbi/faculta/an4/sem1/PAOO/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Norbert/Desktop/nrbi/faculta/an4/sem1/PAOO/build/CMakeFiles/rebuild_cache.dir
