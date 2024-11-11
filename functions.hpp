@@ -9,11 +9,16 @@ private:
     char *color, *brand;
 public:
     //Default constructor
-    Vehicle() : nrOfWheels(0), hp(0), color(nullptr), brand(nullptr){
+    Vehicle() {
         nrOfWheels = new int;
         hp = new int;
         color = new char[STRSIZE];
         brand = new char[STRSIZE];
+
+        *nrOfWheels = 0;
+        *hp = 0;
+        color = nullptr;
+        brand = nullptr;
     }
 
     //Normal constructor
@@ -72,7 +77,22 @@ public:
     char *getVehicleBrand() {
         return brand;
     }
+
 };
+
+void printCarData(Vehicle veh, string message = "") {
+    if (message == "") {
+        cout << "Vehicle data " << veh.getVehicleBrand() << ":" << endl;
+    }
+    else {
+        cout << message << " " << veh.getVehicleBrand() << ":" << endl;
+    }
+
+    cout << veh.getNrOfWheels() << endl;
+    cout << veh.getHp() << endl;
+    cout << veh.getVehicleBrand() << endl;
+    cout << endl;
+}
 
 void printStr(char *str) {
     for (int i = 0; i < strlen(str); i++) {
