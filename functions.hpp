@@ -9,44 +9,22 @@ private:
     char *color, *brand;
 public:
     //Default constructor
-    Vehicle() {
-        nrOfWheels = new int;
-        hp = new int;
-        color = new char[STRSIZE];
-        brand = new char[STRSIZE];
-
-        *nrOfWheels = 0;
-        *hp = 0;
-        color = nullptr;
-        brand = nullptr;
-    }
+    Vehicle(): nrOfWheels(0), hp(0), color(nullptr), brand(nullptr) {}
 
     //Normal constructor
-    Vehicle(int initial_nrOfWheels, int initial_hp, const char *initial_color, const char *initial_brand) {
-        nrOfWheels = new int;
-        hp = new int;
-        color = new char[STRSIZE];
-        brand = new char[STRSIZE];
-        
-        *nrOfWheels = initial_nrOfWheels;
-        *hp = initial_hp;
+    Vehicle(int initial_nrOfWheels, int initial_hp, const char *initial_color, const char *initial_brand)
+    : nrOfWheels(new int(initial_nrOfWheels)), hp(new int(initial_hp)), color(new char[STRSIZE]), brand(new char[STRSIZE])
+    {
         strcpy(color, initial_color);
         strcpy(brand, initial_brand);
     }
 
     //Copy constructor
-    Vehicle(const Vehicle &obj) {
-        nrOfWheels = new int;
-        hp = new int;
-        color = new char[STRSIZE];
-        brand = new char[STRSIZE];
-
-        *nrOfWheels = *obj.nrOfWheels;
-        *hp = *obj.hp;
+    Vehicle(const Vehicle &obj)
+    : nrOfWheels(new int(*obj.nrOfWheels)), hp(new int(*obj.hp)), color(new char[STRSIZE]), brand(new char[STRSIZE])
+    {
         strcpy(color, obj.color);
         strcpy(brand, obj.brand);
-        // *color = ;
-        // *brand = ;
     }
 
     // Move constructor
