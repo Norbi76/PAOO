@@ -9,7 +9,7 @@ private:
     char *color, *brand;
 public:
     //Default constructor
-    Vehicle(): nrOfWheels(0), hp(0), color(nullptr), brand(nullptr) {}
+    Vehicle(): nrOfWheels(nullptr), hp(nullptr), color(nullptr), brand(nullptr) {}
 
     //Normal constructor
     Vehicle(int initial_nrOfWheels, int initial_hp, const char *initial_color, const char *initial_brand)
