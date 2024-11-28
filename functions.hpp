@@ -1,68 +1,118 @@
-# define STRSIZE 10
+#define STRSIZE 10
 #include <cstring>
 #include <string>
 using namespace std;
 
-class Vehicle {
-private: 
+class Vehicle
+{
+private:
     int *nrOfWheels, *hp;
     char *color, *brand;
-public:
-    //Default constructor
-    Vehicle(): nrOfWheels(nullptr), hp(nullptr), color(nullptr), brand(nullptr) {}
 
-    //Normal constructor
+    // Private helper function to copy data members
+    void copyFrom(const Vehicle &other)
+    {
+        nrOfWheels = new int(*other.nrOfWheels);
+        hp = new int(*other.hp);
+        color = new char[STRSIZE];
+        brand = new char[STRSIZE];
+        strcpy(color, other.color);
+        strcpy(brand, other.brand);
+    }
+
+public:
+    // Default constructor
+    Vehicle() : nrOfWheels(nullptr), hp(nullptr), color(nullptr), brand(nullptr) {}
+
+    // Normal constructor
     Vehicle(int initial_nrOfWheels, int initial_hp, const char *initial_color, const char *initial_brand)
-    : nrOfWheels(new int(initial_nrOfWheels)), hp(new int(initial_hp)), color(new char[STRSIZE]), brand(new char[STRSIZE])
+        : nrOfWheels(new int(initial_nrOfWheels)), hp(new int(initial_hp)), color(new char[STRSIZE]), brand(new char[STRSIZE])
     {
         strcpy(color, initial_color);
         strcpy(brand, initial_brand);
     }
 
-    //Copy constructor
-    Vehicle(const Vehicle &obj)
-    : nrOfWheels(new int(*obj.nrOfWheels)), hp(new int(*obj.hp)), color(new char[STRSIZE]), brand(new char[STRSIZE])
+    // Copy constructor
+    Vehicle(const Vehicle &other)
     {
-        strcpy(color, obj.color);
-        strcpy(brand, obj.brand);
+        copyFrom(other);
     }
 
     // Move constructor
-    Vehicle(Vehicle&& other) noexcept: nrOfWheels(other.nrOfWheels), hp(other.hp), color(move(other.color)), brand(move(other.brand)) {
-        other.nrOfWheels = 0;
-        other.hp = 0;
+    Vehicle(Vehicle &&other) noexcept
+        : nrOfWheels(other.nrOfWheels), hp(other.hp), color(other.color), brand(other.brand)
+    {
+        other.nrOfWheels = nullptr;
+        other.hp = nullptr;
         other.color = nullptr;
         other.brand = nullptr;
     }
 
-    //Deconstructor 
-    ~Vehicle() {
-        delete[] nrOfWheels, hp, color, brand;
+    // Copy assignment operator using copy-and-swap idiom
+    Vehicle &operator=(Vehicle other)
+    {
+        swap(*this, other);
+        return *this;
     }
 
-    int getHp() {
+    // Move assignment operator using copy-and-swap idiom
+    Vehicle &operator=(Vehicle &&other) noexcept
+    {
+        if (this != &other)
+        {
+            swap(*this, other);
+        }
+        return *this;
+    }
+
+    // Swap function
+    friend void swap(Vehicle &first, Vehicle &second) noexcept
+    {
+        using std::swap;
+        swap(first.nrOfWheels, second.nrOfWheels);
+        swap(first.hp, second.hp);
+        swap(first.color, second.color);
+        swap(first.brand, second.brand);
+    }
+
+    // Destructor
+    ~Vehicle()
+    {
+        delete nrOfWheels;
+        delete hp;
+        delete[] color;
+        delete[] brand;
+    }
+
+    int getHp() const
+    {
         return *hp;
     }
 
-    int getNrOfWheels() {
+    int getNrOfWheels() const
+    {
         return *nrOfWheels;
     }
 
-    char *getVehicleColor() {
+    const char *getVehicleColor() const
+    {
         return color;
     }
 
-    char *getVehicleBrand() {
+    const char *getVehicleBrand() const
+    {
         return brand;
     }
-
 };
 
-void printCarData(Vehicle veh, string message = "") {
-    if (message == "") {
+void printCarData(const Vehicle &veh, const string &message = "")
+{
+    if (message == "")
+    {
         cout << "Vehicle data " << veh.getVehicleBrand() << ":" << endl;
     }
-    else {
+    else
+    {
         cout << message << " " << veh.getVehicleBrand() << ":" << endl;
     }
 
@@ -72,9 +122,7 @@ void printCarData(Vehicle veh, string message = "") {
     cout << endl;
 }
 
-void printStr(char *str) {
-    for (int i = 0; i < strlen(str); i++) {
-        cout << str[i];
-    }
-    cout << endl;
+void printStr(const char *str)
+{
+    cout << str << endl;
 }
