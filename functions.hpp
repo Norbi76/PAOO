@@ -49,9 +49,13 @@ public:
     }
 
     // Copy assignment operator using copy-and-swap idiom
-    Vehicle &operator=(Vehicle other)
+    Vehicle &operator=(const Vehicle &other)
     {
-        swap(*this, other);
+        if (this != &other)
+        {
+            Vehicle temp(other);
+            swap(*this, temp);
+        }
         return *this;
     }
 
