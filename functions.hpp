@@ -1,6 +1,8 @@
 #define STRSIZE 10
 #include <cstring>
 #include <string>
+#include <vector>
+#include <memory>
 using namespace std;
 
 class Vehicle
@@ -106,6 +108,59 @@ public:
     const char *getVehicleBrand() const
     {
         return brand;
+    }
+
+    void printCarData(const Vehicle &car) const
+    {
+        cout << "Brand: " << car.getVehicleBrand() << ", Color: " << car.getVehicleColor()
+             << ", HP: " << car.getHp() << ", Wheels: " << car.getNrOfWheels() << endl;
+    }
+};
+
+class CarFactory
+{
+public:
+    // Function to deliver a car to a dealership
+    static shared_ptr<Vehicle> deliverCar(int nrOfWheels, int hp, const char *color, const char *brand)
+    {
+        return shared_ptr<Vehicle>(new Vehicle(nrOfWheels, hp, color, brand));
+    }
+};
+
+class CarDealership : public Vehicle
+{
+private:
+    vector<Vehicle> inventory;
+
+public:
+    // Add a vehicle to the inventory
+    void buyCar(const Vehicle &car)
+    {
+        inventory.push_back(car);
+    }
+
+    // Sell a vehicle from the inventory
+    bool sellCar(const string &brand)
+    {
+        for (auto it = inventory.begin(); it != inventory.end(); ++it)
+        {
+            if (it->getVehicleBrand() == brand.c_str())
+            {
+                inventory.erase(it);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Print the inventory
+    void printInventory() const
+    {
+        cout << "Current Inventory:" << endl;
+        for (const auto &car : inventory)
+        {
+            printCarData(car);
+        }
     }
 };
 

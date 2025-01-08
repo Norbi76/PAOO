@@ -28,5 +28,12 @@ int main(void)
     vehicle5 = vehicle3;
     printCarData(vehicle5, "Vehicle move assignment data");
 
+    // Car factory and dealership
+    CarFactory factory;
+    std::shared_ptr<Vehicle> newCar = factory.deliverCar(4, 200, "red", "audi");
+    CarDealership dealership;
+    dealership.buyCar(*newCar);
+    printCarData(*newCar, "Delivered car data");
+
     return 0;
 }
