@@ -32,8 +32,8 @@ int main(void)
     CarFactory factory;
     std::shared_ptr<Vehicle> newCar = factory.deliverCar(4, 200, "red", "audi");
     CarDealership dealership;
-    dealership.buyCar(*newCar);
-    printCarData(*newCar, "Delivered car data");
+    dealership.buyCar(newCar);
+    dealership.printInventory();
 
     return 0;
 }

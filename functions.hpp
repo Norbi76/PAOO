@@ -3,23 +3,26 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <iostream>
 using namespace std;
 
 class Vehicle
 {
 private:
-    int *nrOfWheels, *hp;
-    char *color, *brand;
+    shared_ptr<int> nrOfWheels;
+    shared_ptr<int> hp;
+    unique_ptr<char[]> color;
+    unique_ptr<char[]> brand;
 
     // Private helper function to copy data members
     void copyFrom(const Vehicle &other)
     {
-        nrOfWheels = new int(*other.nrOfWheels);
-        hp = new int(*other.hp);
-        color = new char[STRSIZE];
-        brand = new char[STRSIZE];
-        strcpy(color, other.color);
-        strcpy(brand, other.brand);
+        nrOfWheels = make_shared<int>(*other.nrOfWheels);
+        hp = make_shared<int>(*other.hp);
+        color = make_unique<char[]>(STRSIZE);
+        brand = make_unique<char[]>(STRSIZE);
+        strcpy(color.get(), other.color.get());
+        strcpy(brand.get(), other.brand.get());
     }
 
 public:
@@ -28,10 +31,10 @@ public:
 
     // Normal constructor
     Vehicle(int initial_nrOfWheels, int initial_hp, const char *initial_color, const char *initial_brand)
-        : nrOfWheels(new int(initial_nrOfWheels)), hp(new int(initial_hp)), color(new char[STRSIZE]), brand(new char[STRSIZE])
+        : nrOfWheels(make_shared<int>(initial_nrOfWheels)), hp(make_shared<int>(initial_hp)), color(make_unique<char[]>(STRSIZE)), brand(make_unique<char[]>(STRSIZE))
     {
-        strcpy(color, initial_color);
-        strcpy(brand, initial_brand);
+        strcpy(color.get(), initial_color);
+        strcpy(brand.get(), initial_brand);
     }
 
     // Copy constructor
@@ -42,13 +45,7 @@ public:
 
     // Move constructor
     Vehicle(Vehicle &&other) noexcept
-        : nrOfWheels(other.nrOfWheels), hp(other.hp), color(other.color), brand(other.brand)
-    {
-        other.nrOfWheels = nullptr;
-        other.hp = nullptr;
-        other.color = nullptr;
-        other.brand = nullptr;
-    }
+        : nrOfWheels(move(other.nrOfWheels)), hp(move(other.hp)), color(move(other.color)), brand(move(other.brand)) {}
 
     // Copy assignment operator using copy-and-swap idiom
     Vehicle &operator=(const Vehicle &other)
@@ -81,15 +78,6 @@ public:
         swap(first.brand, second.brand);
     }
 
-    // Destructor
-    ~Vehicle()
-    {
-        delete nrOfWheels;
-        delete hp;
-        delete[] color;
-        delete[] brand;
-    }
-
     int getHp() const
     {
         return *hp;
@@ -102,12 +90,12 @@ public:
 
     const char *getVehicleColor() const
     {
-        return color;
+        return color.get();
     }
 
     const char *getVehicleBrand() const
     {
-        return brand;
+        return brand.get();
     }
 
     void printCarData(const Vehicle &car) const
@@ -123,34 +111,20 @@ public:
     // Function to deliver a car to a dealership
     static shared_ptr<Vehicle> deliverCar(int nrOfWheels, int hp, const char *color, const char *brand)
     {
-        return shared_ptr<Vehicle>(new Vehicle(nrOfWheels, hp, color, brand));
+        return make_shared<Vehicle>(nrOfWheels, hp, color, brand);
     }
 };
 
-class CarDealership : public Vehicle
+class CarDealership
 {
 private:
-    vector<Vehicle> inventory;
+    vector<shared_ptr<Vehicle>> inventory;
 
 public:
     // Add a vehicle to the inventory
-    void buyCar(const Vehicle &car)
+    void buyCar(shared_ptr<Vehicle> car)
     {
         inventory.push_back(car);
-    }
-
-    // Sell a vehicle from the inventory
-    bool sellCar(const string &brand)
-    {
-        for (auto it = inventory.begin(); it != inventory.end(); ++it)
-        {
-            if (it->getVehicleBrand() == brand.c_str())
-            {
-                inventory.erase(it);
-                return true;
-            }
-        }
-        return false;
     }
 
     // Print the inventory
@@ -159,7 +133,7 @@ public:
         cout << "Current Inventory:" << endl;
         for (const auto &car : inventory)
         {
-            printCarData(car);
+            car->printCarData(*car);
         }
     }
 };
